@@ -1,7 +1,0 @@
-# application-local.yml (절대 Git에 올리면 안 됨)
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    password: JimiAsdf1234
