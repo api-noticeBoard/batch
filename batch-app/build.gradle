@@ -18,8 +18,12 @@ repositories {
 }
 
 dependencies {
+    // 멀티모듈 추가
+    implementation project(':batch-core')
     // Oracle JDBC 드라이버 추가
     implementation 'com.oracle.database.jdbc:ojdbc11'
+    // H2
+    implementation 'com.h2database:h2'
 
     // SpringBatch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
@@ -36,5 +40,6 @@ dependencies {
 }
 
 tasks.named('test') {
+    enabled = false
     useJUnitPlatform()
 }

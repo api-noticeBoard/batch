@@ -1,10 +1,54 @@
 spring:
   profiles:
     # PROFILE 환경 변수가 없으면 dev와 local 프로파일을 기본으로 활성화
-    active: ${PROFILE:dev,local}
+    active: ${PROFILE:local}
+  main:
+    allow-bean-definition-overriding: true
+  batch:
+    jdbc:
+      # Spring Batch 메타데이터 테이블을 항상 생성
+      # always: 애플리케이션 시작 시 항상 Spring Batch 메타데이터 테이블 생성 스크립트를 실행합니다. (처음 실행 시 이 옵션을 사용)
+      # embedded: 내장 DB일 때만 실행합니다. (기본값)
+      # never: 비활성화(운영 환경은 DBA가 미리 테이블을 만들어두고 이 옵션을 사용합니다.)
+      initialize-schema: embedded
+#    # app 시작 시 모든 Job을 자동실행 설정(false로 설정해야 파라미터로 원하는 Job만 실행할 수 있음)
+#    job:
+#      enabled: true
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#  sql:
+    # inMemory(H2DB...)
+    # always: 테이블 존재 여부와 상관없이 항상 실행
+    # if_not_exists (일반적): 테이블이 없을 때만 실행
+    # ALWAYS : 항상 초기화
+    # EMBEDDED : 테이블 없을 때만
+    # NEVER : 비활성화
+#    init:
+#      mode: EMBEDDED
   datasource:
     # Oracle Autonomous Database
     url: jdbc:oracle:thin:@(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gde55684cd674ef_boarddb_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
     username: ADMIN
 #    password: ${BOARD_DB_PASSWORD}
     driver-class-name: oracle.jdbc.driver.OracleDriver
+#    # 로컬 개발 시 재시작해도 데이터가 유지되도록 파일 기반 H2를 사용합니다.
+#    url: jdbc:h2:file:./data/h2demo;AUTO_SERVER=TRUE
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#    initialization-mode: always
+#    hikari:
+#      # 이 커넥션 풀에서 나가는 모든 커넥션의 기본 격리 수준을 TRANSACTION_READ_COMMITTED'로 설정합
+#      transaction-isolation: TRANSACTION_READ_COMMITTED
+
+# Mybatis
+mybatis:
+  # MyBatis가 mapper 파일을 찾을 경로를 명시적으로 지정
+  mapper-locations: classpath:/mapper/**/*.xml
+  # MyBatis 전역 설정을 추가
+  configuration:
+    # null 값이 파라미터로 넘어올 때, JDBC 타입을 VARCHAR로 지정하여
+    # ORA-17004 오류를 방지
+    jdbc-type-for-null: VARCHAR

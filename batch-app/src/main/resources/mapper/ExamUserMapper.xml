@@ -1,0 +1,31 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portfolio.batch.app.mapper.ExamUserMapper">
+<!--    <resultMap id="categoryResultMap" type="com.portfolio.batch.app.domain.ExamUser">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="username" column="username"/>-->
+<!--        <result property="status" column="status"/>-->
+<!--        <result property="lastLoginAt" column="last_login_at"/>-->
+<!--    </resultMap>-->
+    <!-- 휴면 대상 사용자 조회 쿼리 -->
+    <select id="findDormantUsers" parameterType="java.time.LocalDateTime" resultType="com.portfolio.batch.app.domain.ExamUser">
+        SELECT
+        id,
+        username,
+        status,
+        last_login_at AS lastLoginAt
+        FROM
+        exam_user
+        WHERE
+        status = 'ACTIVE'
+        AND last_login_at &lt;= #{targetDate}
+    </select>
+    <!-- 사용자 상태 업데이트 쿼리 -->
+    <update id="updateUserStatus" parameterType="com.portfolio.batch.app.domain.ExamUser">
+        UPDATE
+        exam_user
+        SET
+        status = #{status}
+        WHERE
+        id = #{id}
+    </update>
+</mapper>
